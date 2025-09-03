@@ -24,15 +24,25 @@ public class BarrierLayer {
 
     // 添加障碍物
     public void draw(Graphics g) {
-//        Barrier barrier = new Barrier(300, 0, 300, Barrier.type.DOWN);
-//        barriers.add(barrier);
-//        Barrier barrier1 = new Barrier(400, 0, 300, Barrier.type.UP);
-//        barriers.add(barrier1);
-//        barriers.get(0).draw(g);
-//        barriers.get(1).draw(g);
         logic();
-        for (Barrier barrier : barriers) {
-            barrier.draw(g);
+//        for (Barrier barrier : barriers) {
+//            if (barrier.isVisible()) {
+//                barrier.draw(g);
+//            } else {
+//                barriers.remove(barrier);
+//                BarrierPool.returnBarrier(barrier);
+//            }
+//        }
+        // 使用迭代器安全删除
+        var iterator = barriers.iterator();
+        while (iterator.hasNext()) {
+            Barrier barrier = iterator.next();
+            if (barrier.isVisible()) {
+                barrier.draw(g);
+            } else {
+                iterator.remove();
+                BarrierPool.returnBarrier(barrier);
+            }
         }
     }
 
@@ -58,9 +68,18 @@ public class BarrierLayer {
     // 生成一组管道
     public void createBarrier() {
         randomize();
-        Barrier downBarrier = new Barrier(GAME_WIDTH, 0, downBarrierHeight, Barrier.type.DOWN);
-        barriers.add(downBarrier);
-        Barrier upBarrier = new Barrier(GAME_WIDTH, GAME_HEIGHT-upBarrierHeight, upBarrierHeight, Barrier.type.UP);
-        barriers.add(upBarrier);
+        insert(GAME_WIDTH, 0, downBarrierHeight, Barrier.type.DOWN);
+        insert(GAME_WIDTH, GAME_HEIGHT-upBarrierHeight, upBarrierHeight, Barrier.type.UP);
+    }
+
+    // 从池中获取对象，封装成barrier存入barriers数组
+    public void insert(int x, int y, int height, Barrier.type barrierType) {
+        Barrier barrier = BarrierPool.getBarrier();
+        barrier.setX(x);
+        barrier.setY(y);
+        barrier.setHeight(height);
+        barrier.setBarrierType(barrierType);
+        barrier.setVisible(true);
+        barriers.add(barrier);
     }
 }

@@ -37,6 +37,8 @@ public class Barrier {
     public static final int MID_DOWN_PIPE_HEIGHT = images[3].getHeight();
     // 障碍物移动速度
     public static final int SPEED = 3;
+    // 障碍物状态
+    public boolean visible;
 
     // 构造方法
     public Barrier() {
@@ -47,6 +49,46 @@ public class Barrier {
         this.y = y;
         this.barrierType = barrierType;
         this.height = height;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public type getBarrierType() {
+        return barrierType;
+    }
+
+    public void setBarrierType(type barrierType) {
+        this.barrierType = barrierType;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     // 绘制障碍物
@@ -67,6 +109,9 @@ public class Barrier {
         g.drawImage(images[1], x, y+count*MID_UP_PIPE_HEIGHT, null);
         // 障碍物移动
         x -= SPEED;
+        if (x < -78) {
+            visible = false;
+        }
     }
     // 绘制朝上的障碍物
     private void drawUpBarrier(Graphics g) {
@@ -79,6 +124,9 @@ public class Barrier {
         g.drawImage(images[0], x, y, null);
         // 障碍物移动
         x -= SPEED;
+        if (x < -78) {
+            visible = false;
+        }
     }
     // 判断是否需要再生成障碍物
     public boolean shouldRenew() {
