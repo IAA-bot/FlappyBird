@@ -23,7 +23,22 @@ public class Bird {
     private boolean up = false, down = false;
     // 鸟的位置
     private int x = 200, y = 322;
+    // 鸟的矩形判定框
+    private Rectangle rect;
+    // 鸟是否可以继续飞行
+    private boolean canFly = true;
 
+    public void setCanFly(boolean b) {
+        this.canFly = b;
+    }
+
+    public boolean isCanFly() {
+        return canFly;
+    }
+
+    public Rectangle getRect() {
+        return rect;
+    }
     // 控制鸟的飞行节奏
     private long lastFlyTime = 0; // 上次飞行时间
     private long flyTimer = 0; // 飞行计时器
@@ -34,6 +49,7 @@ public class Bird {
         for (int i = 0; i < BIRD_IMG_COUNT; i++) {
             images[i] = GameUtil.loadBufferedImage(BIRD_IMG_PATH[i]);
         }
+        rect = new Rectangle(x, y, images[0].getWidth(), images[0].getHeight());
     }
     // 鸟的移动方向
     public void flyLogic() {
@@ -56,6 +72,7 @@ public class Bird {
             if (y > 600) {
                 y = 600;
                 down = false;
+                canFly = false;
             }
         }
     }
@@ -70,6 +87,9 @@ public class Bird {
         }
         flyLogic();
         g.drawImage(images[index], x, y, null);
+        // 更新矩形判定框位置
+//        g.drawRect(x, y, rect.width, rect.height);
+        rect.setLocation(x, y);
     }
 
     public void setState(state s) {

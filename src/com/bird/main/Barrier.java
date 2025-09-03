@@ -35,13 +35,22 @@ public class Barrier {
     public static final int DOWN_PIPE_HEIGHT = images[1].getHeight();
     public static final int MID_UP_PIPE_HEIGHT = images[2].getHeight();
     public static final int MID_DOWN_PIPE_HEIGHT = images[3].getHeight();
+    public static final int PIPE_WIDTH = images[0].getWidth();
     // 障碍物移动速度
     public static final int SPEED = 3;
     // 障碍物状态
     public boolean visible;
+    // 障碍物矩形判定框
+    private Rectangle rect;
+    // 是否计分了
+    private boolean scored = false;
 
+    public Rectangle getRect() {
+        return rect;
+    }
     // 构造方法
     public Barrier() {
+        rect = new Rectangle();
     }
 
     public Barrier(int x, int y,int height, type barrierType) {
@@ -107,6 +116,7 @@ public class Barrier {
         }
         // 绘制顶部图片
         g.drawImage(images[1], x, y+count*MID_UP_PIPE_HEIGHT, null);
+        drawRect(g);
         // 障碍物移动
         x -= SPEED;
         if (x < -78) {
@@ -122,14 +132,28 @@ public class Barrier {
         }
         // 绘制顶部图片
         g.drawImage(images[0], x, y, null);
+        drawRect(g);
         // 障碍物移动
         x -= SPEED;
-        if (x < -78) {
+        if (x < -PIPE_WIDTH) {
             visible = false;
         }
     }
     // 判断是否需要再生成障碍物
     public boolean shouldRenew() {
         return GAME_WIDTH - x > 200;
+    }
+    // 绘制障碍物的矩形判定框
+    public void drawRect(Graphics g) {
+        rect.setBounds(x, y, PIPE_WIDTH, height);
+//        g.drawRect(rect.x, rect.y, rect.width, rect.height);
+    }
+
+    public boolean isScored() {
+        return scored;
+    }
+
+    public void setScored(boolean scored) {
+        this.scored = scored;
     }
 }

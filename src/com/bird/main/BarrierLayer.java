@@ -17,13 +17,16 @@ public class BarrierLayer {
     private Random random = new Random();
     private int upBarrierHeight;
     private int downBarrierHeight;
+    private int score = 0;
 
     public BarrierLayer() {
         barriers = new ArrayList<>();
     }
 
     // 添加障碍物
-    public void draw(Graphics g) {
+    public void draw(Graphics g, Bird bird) {
+        collide(bird);
+        // 逻辑处理
         logic();
 //        for (Barrier barrier : barriers) {
 //            if (barrier.isVisible()) {
@@ -39,6 +42,14 @@ public class BarrierLayer {
             Barrier barrier = iterator.next();
             if (barrier.isVisible()) {
                 barrier.draw(g);
+                // 判断鸟是否刚通过管道
+                if (barrier.getBarrierType() == Barrier.type.UP && barrier.isVisible() && !barrier.isScored()
+                        && !barrier.getRect().contains(bird.getRect().x, bird.getRect().y)
+                        && bird.getRect().x > barrier.getRect().x + barrier.getRect().width
+                        && !barrier.getRect().contains(bird.getRect().x - Barrier.SPEED, bird.getRect().y)) {
+                    score++;
+                    barrier.setScored(true);
+                }
             } else {
                 iterator.remove();
                 BarrierPool.returnBarrier(barrier);
@@ -81,5 +92,21 @@ public class BarrierLayer {
         barrier.setBarrierType(barrierType);
         barrier.setVisible(true);
         barriers.add(barrier);
+    }
+
+    // 判断障碍物是否与鸟碰撞
+    public boolean collide(Bird bird) {
+        for (Barrier barrier : barriers) {
+            if (barrier.isVisible() && bird.getRect().intersects(barrier.getRect())) {
+                System.out.println("碰撞了");
+                bird.setCanFly(false);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getScore() {
+        return score;
     }
 }
