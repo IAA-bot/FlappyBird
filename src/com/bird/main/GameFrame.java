@@ -1,6 +1,8 @@
 package com.bird.main;
 
 // 静态导入常量
+import com.bird.util.GameUtil;
+
 import static com.bird.util.Constant.*;
 
 import java.awt.*;
@@ -8,6 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * @author IAA
@@ -90,8 +93,9 @@ public class GameFrame extends Frame {
     public void paint(Graphics g) {
         if (!isStart) {
             // 绘制封面
+            BufferedImage cover = GameUtil.loadBufferedImage(START_IMG_PATH);
             g.drawImage(cover, 0, 0, GAME_WIDTH, GAME_HEIGHT, null);
-            g.setColor(Color.WHITE);
+            g.setColor(Color.BLACK);
             g.setFont(new Font("微软雅黑", Font.BOLD, 40));
             g.drawString("按Enter开始游戏", GAME_WIDTH / 2 - 150, GAME_HEIGHT - 100);
             return;
@@ -124,7 +128,7 @@ public class GameFrame extends Frame {
                 highScore = score;
             }
             // 绘制游戏结束图片
-            Image gameOverImg = Toolkit.getDefaultToolkit().getImage(GAMEOVER_IMG_PATH);
+            BufferedImage gameOverImg = GameUtil.loadBufferedImage(GAMEOVER_IMG_PATH);
             g.drawImage(gameOverImg, 0, 0, GAME_WIDTH, GAME_HEIGHT, null);
             // 显示分数和最高分
             g.setColor(Color.BLACK);

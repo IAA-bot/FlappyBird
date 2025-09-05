@@ -43,10 +43,11 @@ public class BarrierLayer {
             if (barrier.isVisible()) {
                 barrier.draw(g);
                 // 判断鸟是否刚通过管道
-                if (barrier.getBarrierType() == Barrier.type.UP && barrier.isVisible() && !barrier.isScored()
-                        && !barrier.getRect().contains(bird.getRect().x, bird.getRect().y)
-                        && bird.getRect().x > barrier.getRect().x + barrier.getRect().width
-                        && !barrier.getRect().contains(bird.getRect().x - Barrier.SPEED, bird.getRect().y)) {
+                if (barrier.getBarrierType() == Barrier.type.UP
+                        && barrier.isVisible()
+                        && !barrier.isScored()
+                        && bird.getRect().x >= barrier.getRect().x + barrier.getRect().width
+                        && bird.getRect().x - Barrier.SPEED < barrier.getRect().x + barrier.getRect().width) {
                     score++;
                     barrier.setScored(true);
                 }
@@ -98,7 +99,7 @@ public class BarrierLayer {
     public boolean collide(Bird bird) {
         for (Barrier barrier : barriers) {
             if (barrier.isVisible() && bird.getRect().intersects(barrier.getRect())) {
-                System.out.println("碰撞了");
+//                System.out.println("碰撞了");
                 bird.setCanFly(false);
                 return true;
             }

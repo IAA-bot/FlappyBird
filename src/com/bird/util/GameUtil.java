@@ -2,8 +2,8 @@ package com.bird.util;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author IAA
@@ -12,8 +12,11 @@ import java.io.IOException;
 public class GameUtil {
     // 加载图片
     public static BufferedImage loadBufferedImage(String path) {
-        try {
-            return ImageIO.read(new FileInputStream(path)); // 这里可以使用ImageIO.read(new File(path));来加载图片
+        try (InputStream inputStream = GameUtil.class.getClassLoader().getResourceAsStream(path)) {
+            if (inputStream == null) {
+                throw new IOException("资源未找到" + path);
+            }
+            return ImageIO.read(inputStream); // 这里可以使用ImageIO.read(new File(path));来加载图片
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

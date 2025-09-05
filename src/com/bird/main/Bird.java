@@ -42,6 +42,10 @@ public class Bird {
     // 控制鸟的飞行节奏
     private long lastFlyTime = 0; // 上次飞行时间
     private long flyTimer = 0; // 飞行计时器
+    // 鸟的移动速度
+    private int speed = 0;
+    private int gravity = 1;
+    private int upSpeed = -10;
 
     // 初始化
     public Bird() {
@@ -53,27 +57,36 @@ public class Bird {
     }
     // 鸟的移动方向
     public void flyLogic() {
-        // 鸟的移动速度
-        int speed = 5;
         if (up) {
             // 向上飞持续时间（毫秒）
             long flyDuration = 300;
             if (System.currentTimeMillis() - flyTimer < flyDuration) {
-                y -= speed * 2;
-                if (y < 20) y = 20;
+                if (y < 20) {
+                    y = 20;
+                    speed = 0;
+                    canFly = false;
+                } else {
+                    speed = upSpeed;
+                }
             } else {
                 up = false;
                 down = true;
                 currentState = state.DOWN;
             }
         } else if (down) {
-            y += speed;
             // 控制鸟的下降高度
             if (y > 600) {
                 y = 600;
+                speed = 0;
                 down = false;
                 canFly = false;
             }
+        }
+
+        y += speed;
+        // 模拟重力加速度
+        if (speed < 12) {
+            speed += gravity;
         }
     }
 
